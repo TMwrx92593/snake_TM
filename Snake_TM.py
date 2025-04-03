@@ -70,3 +70,56 @@ def gra():
                         game_close = False
                     if event.key == pygame.K_c:
                         gra()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_over = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    x1_zmiana = -wielkosc_segmentu
+                    y1_zmiana = 0
+                elif event.key == pygame.K_RIGHT:
+                    x1_zmiana = wielkosc_segmentu
+                    y1_zmiana = 0
+                elif event.key == pygame.K_UP:
+                    y1_zmiana = -wielkosc_segmentu
+                    x1_zmiana = 0
+                elif event.key == pygame.K_DOWN:
+                    y1_zmiana = wielkosc_segmentu
+                    x1_zmiana = 0
+
+        if x1 >= szerokość or x1 < 0 or y1 >= wysokość or y1 < 0:
+            game_close = True
+        x1 += x1_zmiana
+        y1 += y1_zmiana
+        okno.fill(niebieski)
+        pygame.draw.rect(okno, czerwony, [jabłko_x, jabłko_y, wielkosc_segmentu, wielkosc_segmentu])
+        segment_węża = []
+        segment_węża.append([x1, y1])
+        if len(segmenty_węża) > dlugosc_węża:
+            del segmenty_węża[0]
+
+        segmenty_węża.append(segment_węża[0])
+
+        for x in segmenty_węża[:-1]:
+            if x == segment_węża[0]:
+                game_close = True
+
+        rysuj_weza(wielkosc_segmentu, segmenty_węża)
+        pokaz_wynik(dlugosc_węża - 1)
+
+        pygame.display.update()
+
+     
+        if x1 == jabłko_x and y1 == jabłko_y:
+            jabłko_x = round(random.randrange(0, szerokość - wielkosc_segmentu) / 10.0) * 10.0
+            jabłko_y = round(random.randrange(0, wysokość - wielkosc_segmentu) / 10.0) * 10.0
+            dlugosc_węża += 1
+
+        clock.tick(szybkość)
+
+    pygame.quit()
+    quit()
+
+
+gra()
