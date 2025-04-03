@@ -23,3 +23,13 @@ wielkosc_segmentu = 10
 
 font_style = pygame.font.SysFont("bahnschrift", 25)
 wynik_font = pygame.font.SysFont("comicsansms", 35)
+
+
+def pokaz_wynik(wynik):
+    value = wynik_font.render(f"Twoje wyniki: {wynik}", True, czarny)
+    okno.blit(value, [0, 0])
+
+
+def rysuj_weza(wielkosc_segmentu, lista_segmentów):
+    for x in lista_segmentów:
+        pygame.draw.rect(okno, zielony, [x[0], x[1], wielkosc_segmentu, wielkosc_segmentu])
