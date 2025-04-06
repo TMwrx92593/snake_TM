@@ -16,7 +16,7 @@ okno = pygame.display.set_mode((szerokość, wysokość))
 pygame.display.set_caption('Snake Game')
 
 clock = pygame.time.Clock()
-szybkość = 1 
+szybkość = 10 
 
 
 wielkosc_segmentu = 10
@@ -53,6 +53,8 @@ def gra():
     jabłko_x = round(random.randrange(0, szerokość - wielkosc_segmentu) / 10.0) * 10.0
     jabłko_y = round(random.randrange(0, wysokość - wielkosc_segmentu) / 10.0) * 10.0
 
+    pierwszy_ruch = False
+
     while not game_over:
 
         while game_close:
@@ -75,6 +77,8 @@ def gra():
             if event.type == pygame.QUIT:
                 game_over = True
             if event.type == pygame.KEYDOWN:
+                if not pierwszy_ruch:
+                    pierwszy_ruch = True  
                 if event.key == pygame.K_LEFT:
                     x1_zmiana = -wielkosc_segmentu
                     y1_zmiana = 0
@@ -87,6 +91,9 @@ def gra():
                 elif event.key == pygame.K_DOWN:
                     y1_zmiana = wielkosc_segmentu
                     x1_zmiana = 0
+
+        if not pierwszy_ruch:
+            continue
 
         if x1 >= szerokość or x1 < 0 or y1 >= wysokość or y1 < 0:
             game_close = True
