@@ -1,5 +1,4 @@
 import pygame
-import time
 import random
 
 pygame.init()
@@ -33,6 +32,24 @@ def pokaz_wynik(wynik):
 def rysuj_weza(wielkosc_segmentu, lista_segmentów):
     for x in lista_segmentów:
         pygame.draw.rect(okno, zielony, [x[0], x[1], wielkosc_segmentu, wielkosc_segmentu])
+
+
+
+def ekran_powitalny():
+    okno.fill(niebieski)
+    powitanie_text = font_style.render("Snake let's play - Push the button", True, czarny)
+    powitanie_x = (szerokość - powitanie_text.get_width()) / 2  
+    powitanie_y = wysokość / 2 - 25  
+    okno.blit(powitanie_text, [powitanie_x, powitanie_y])
+
+ 
+    instrukcja_text = font_style.render("Naciśnij dowolny klawisz, aby rozpocząć!", True, czarny)
+    instrukcja_x = (szerokość - instrukcja_text.get_width()) / 2  
+    instrukcja_y = wysokość / 2 + 25 
+    okno.blit(instrukcja_text, [instrukcja_x, instrukcja_y])
+
+    pygame.display.update()
+
 
 def gra():
     game_over = False
@@ -128,5 +145,16 @@ def gra():
     pygame.quit()
     quit()
 
+def menu():
+    ekran_powitalny()
+    rozpocznij_grę = False
+    while not rozpocznij_grę:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                rozpocznij_grę = True
+                gra()
 
-gra()
+menu()
