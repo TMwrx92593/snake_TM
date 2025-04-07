@@ -8,6 +8,7 @@ czarny = (0, 0, 0)
 czerwony = (213, 50, 80)
 zielony = (0, 255, 0)
 niebieski = (50, 153, 213)
+cegla = (139, 69, 19)
 
 szerokość = 600
 wysokość = 400
@@ -50,6 +51,33 @@ def ekran_powitalny():
 
     pygame.display.update()
 
+def rysuj_obramowanie():
+    cegła_szerokość = 20  
+    cegła_wysokość = 10  
+
+    for x in range(0, szerokość, cegła_szerokość):
+        pygame.draw.rect(okno, cegla, [x, 0, cegła_szerokość, cegła_wysokość])
+        pygame.draw.rect(okno, cegla, [x, wysokość - cegła_wysokość, cegła_szerokość, cegła_wysokość]) 
+    
+    for y in range(0, wysokość, cegła_wysokość):
+        pygame.draw.rect(okno, cegla, [0, y, cegła_szerokość, cegła_wysokość])  
+        pygame.draw.rect(okno, cegla, [szerokość - cegła_szerokość, y, cegła_szerokość, cegła_wysokość])  
+
+def generuj_jablko():
+ 
+    safe_zone_start = 20 
+    safe_zone_end_x = szerokość - 20  
+    safe_zone_end_y = wysokość - 20  
+
+    jabłko_x = round(random.randrange(safe_zone_start, (safe_zone_end_x // wielkosc_segmentu)) - 1) * wielkosc_segmentu
+    jabłko_y = round(random.randrange(safe_zone_start, (safe_zone_end_y // wielkosc_segmentu)) - 1) * wielkosc_segmentu
+    return jabłko_x, jabłko_y
+
+def pokaz_game_over():
+    game_over_text = font_style.render("Game Over! Naciśnij C, aby kontynuować lub Q, aby wyjść.", True, czarny)
+    tekst_x = (szerokość - game_over_text.get_width()) / 2
+    tekst_y = wysokość / 2
+    okno.blit(game_over_text, [tekst_x, tekst_y])
 
 def gra():
     game_over = False
@@ -72,10 +100,14 @@ def gra():
 
     pierwszy_ruch = False
 
+    ostatni_kierunek = None
+
     while not game_over:
 
         while game_close:
             okno.fill(niebieski)
+            rysuj_obramowanie()
+            pokaz_game_over()
             pokaz_wynik(dlugosc_węża - 1)
             pygame.display.update()
 
@@ -95,28 +127,40 @@ def gra():
                 game_over = True
             if event.type == pygame.KEYDOWN:
                 if not pierwszy_ruch:
-                    pierwszy_ruch = True  
-                if event.key == pygame.K_LEFT:
+                    pierwszy_ruch = True 
+
+                
+                if event.key == pygame.K_LEFT and ostatni_kierunek != "RIGHT":
                     x1_zmiana = -wielkosc_segmentu
                     y1_zmiana = 0
-                elif event.key == pygame.K_RIGHT:
+                    ostatni_kierunek = "LEFT"
+                elif event.key == pygame.K_RIGHT and ostatni_kierunek != "LEFT":
                     x1_zmiana = wielkosc_segmentu
                     y1_zmiana = 0
-                elif event.key == pygame.K_UP:
+                    ostatni_kierunek = "RIGHT"
+                elif event.key == pygame.K_UP and ostatni_kierunek != "DOWN":
                     y1_zmiana = -wielkosc_segmentu
                     x1_zmiana = 0
-                elif event.key == pygame.K_DOWN:
+                    ostatni_kierunek = "UP"
+                elif event.key == pygame.K_DOWN and ostatni_kierunek != "UP":
                     y1_zmiana = wielkosc_segmentu
                     x1_zmiana = 0
+                    ostatni_kierunek = "DOWN"
 
         if not pierwszy_ruch:
             continue
+
+        if x1 >= szerokość - wielkosc_segmentu or x1 < wielkosc_segmentu or y1 >= wysokość - wielkosc_segmentu or y1 < wielkosc_segmentu:
+            game_close = True
 
         if x1 >= szerokość or x1 < 0 or y1 >= wysokość or y1 < 0:
             game_close = True
         x1 += x1_zmiana
         y1 += y1_zmiana
         okno.fill(niebieski)
+        
+        rysuj_obramowanie()
+
         pygame.draw.rect(okno, czerwony, [jabłko_x, jabłko_y, wielkosc_segmentu, wielkosc_segmentu])
         segment_węża = []
         segment_węża.append([x1, y1])
