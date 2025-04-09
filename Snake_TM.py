@@ -73,11 +73,18 @@ def generuj_jablko():
     jabłko_y = round(random.randrange(safe_zone_start, (safe_zone_end_y // wielkosc_segmentu)) - 1) * wielkosc_segmentu
     return jabłko_x, jabłko_y
 
-def pokaz_game_over():
-    game_over_text = font_style.render("Game Over! Naciśnij C, aby kontynuować lub Q, aby wyjść.", True, czarny)
+def pokaz_game_over(wynik):
+    game_over_text = font_style.render("Game Over!", True, czarny)
+    wynik_text = font_style.render(f"Twój wynik: {wynik}", True, czarny)
+    
     tekst_x = (szerokość - game_over_text.get_width()) / 2
-    tekst_y = wysokość / 2
+    tekst_y = wysokość / 2 - 50
     okno.blit(game_over_text, [tekst_x, tekst_y])
+
+    wynik_x = (szerokość - wynik_text.get_width()) / 2
+    wynik_y = wysokość / 2
+    okno.blit(wynik_text, [wynik_x, wynik_y])
+
 
 def gra():
     game_over = False
@@ -95,8 +102,7 @@ def gra():
     dlugosc_węża = 1
 
   
-    jabłko_x = round(random.randrange(0, szerokość - wielkosc_segmentu) / 10.0) * 10.0
-    jabłko_y = round(random.randrange(0, wysokość - wielkosc_segmentu) / 10.0) * 10.0
+    jabłko_x, jabłko_y = generuj_jablko()
 
     pierwszy_ruch = False
 
@@ -107,7 +113,7 @@ def gra():
         while game_close:
             okno.fill(niebieski)
             rysuj_obramowanie()
-            pokaz_game_over()
+            pokaz_game_over(dlugosc_węża - 1)
             pokaz_wynik(dlugosc_węża - 1)
             pygame.display.update()
 
@@ -151,17 +157,16 @@ def gra():
             continue
 
         if x1 >= szerokość - wielkosc_segmentu or x1 < wielkosc_segmentu or y1 >= wysokość - wielkosc_segmentu or y1 < wielkosc_segmentu:
-            game_close = True
+           game_close = True
 
-        if x1 >= szerokość or x1 < 0 or y1 >= wysokość or y1 < 0:
-            game_close = True
         x1 += x1_zmiana
         y1 += y1_zmiana
         okno.fill(niebieski)
-        
+
         rysuj_obramowanie()
 
         pygame.draw.rect(okno, czerwony, [jabłko_x, jabłko_y, wielkosc_segmentu, wielkosc_segmentu])
+
         segment_węża = []
         segment_węża.append([x1, y1])
         if len(segmenty_węża) > dlugosc_węża:
@@ -178,13 +183,14 @@ def gra():
 
         pygame.display.update()
 
-     
+
         if x1 == jabłko_x and y1 == jabłko_y:
-            jabłko_x = round(random.randrange(0, szerokość - wielkosc_segmentu) / 10.0) * 10.0
-            jabłko_y = round(random.randrange(0, wysokość - wielkosc_segmentu) / 10.0) * 10.0
+            jabłko_x, jabłko_y = generuj_jablko()
             dlugosc_węża += 1
 
         clock.tick(szybkość)
+
+
 
     pygame.quit()
     quit()
