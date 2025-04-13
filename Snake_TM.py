@@ -24,20 +24,20 @@ wynik_font = pygame.font.SysFont("comicsansms", 35)
 
 
 def pokaz_wynik(wynik):
-    """Wyświetla aktualny wynik w lewym górnym rogu."""
+    
     value = wynik_font.render(f"Twoje wyniki: {wynik}", True, czarny)
     okno.blit(value, (0,0))
 
 
 def rysuj_weza( lista_segmentów):
-    """Rysuje węża na ekranie."""
+    
     for segment in lista_segmentów:
         pygame.draw.rect(okno, zielony, [segment[0], segment[1], wielkosc_segmentu, wielkosc_segmentu])
 
 
 
 def ekran_powitalny():
-    """Wyświetla ekran powitalny przed rozpoczęciem gry."""
+   
     okno.fill(niebieski)
     powitanie_text = font_style.render("Snake let's play - Push the button", True, czarny)
     instrukcja_text = font_style.render("Naciśnij dowolny klawisz, aby rozpocząć!", True, czarny)
